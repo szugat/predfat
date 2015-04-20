@@ -6,6 +6,7 @@
 #' @param ... further paraments passed to optim()
 #' @return optimal solution for the parameter in the link function in optimum and estimated 
 #'         information matrix in I
+#' @export
 estML <- function(x, t, start, ...){
   ## link function
   link <- function(theta, log = FALSE){
