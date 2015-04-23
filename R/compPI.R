@@ -27,8 +27,8 @@ compPI <- function(xNew, x0, L, L_max = 35L, theta, alpha, I, withSolve = TRUE) 
   fitted <- getFit(newdata = xNew, theta = theta)
   
   getInterval <- function(rates, newdata) {
-    bLower <- qhypoexp(p = alpha/2, rates = rates, interval = c(0, 10^10))$root
-    bUpper <- qhypoexp(p = 1 - alpha/2, rates = rates, interval = c(0, 10^10))$root
+    bLower <- qhypoexp(p = alpha/2, rate = rates, interval = c(0, 10^10))
+    bUpper <- qhypoexp(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))
     bDot <- function(y){
       -1/dhypoexp(x = y, rate = rates) * gradH(newdata, y, theta)
     }
