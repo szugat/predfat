@@ -1,14 +1,19 @@
-#' Implicit computation of the p-quantile from the hypoexponential distribution
+#' p-quantile from the hypo-exponential distribution
 #' 
-#' @param p probability for the quantile in [0,1]
-#' @param rate vector of rates of hypoexponential distribution
-#' @param interval search interval in which uniroot() searches for the quantile
-#' @return p-quantile from the hypoexponential distribution
+#' The p-quantile from the hypo-exponential distribution is computed implicitly by computing the root of H(x) = F(x) - p,
+#' where F is the distribution function of the hypo-exponential distribution
 #' 
-qhypoexp <- function(p, rate, interval){
+#' @param p vector of probabilities
+#' @param rate vector of (unique) rates 
+#' @param interval search interval in which \code{uniroot} searches for the quantile
+#' @return p-quantile from the hypo-exponential distribution
+#' 
+qhypoexp <- Vectorize(function(p, rate, interval = c(0, 10^10)){
   require(sdprisk)
+  stopifnot(p >= 0 && p <= 1,
+            all(is.finite(rate)))
   H <- function(b){
-    phypoexp(q = b, rate = rates) - p
+    phypoexp(q = b, rate = rate) - p
   }
   uniroot(H, interval = interval)$root
-}
+}, vectorize.args = "p")
