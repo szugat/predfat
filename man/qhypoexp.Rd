@@ -2,21 +2,22 @@
 % Please edit documentation in R/qhypoexp.R
 \name{qhypoexp}
 \alias{qhypoexp}
-\title{Implicit computation of the p-quantile from the hypoexponential distribution}
+\title{p-quantile from the hypo-exponential distribution}
 \usage{
-qhypoexp(p, rates, interval)
+qhypoexp(p, rate, interval = c(0, 10^10))
 }
 \arguments{
-\item{p}{probability for the quantile in [0,1]}
+\item{p}{vector of probabilities}
 
-\item{rates}{vector of rates of hypoexponential distribution}
+\item{rate}{vector of (unique) rates}
 
-\item{interval}{search interval in which uniroot() searches for the quantile}
+\item{interval}{search interval in which \code{uniroot} searches for the quantile}
 }
 \value{
-p-quantile from the hypoexponential distribution
+p-quantile from the hypo-exponential distribution
 }
 \description{
-Implicit computation of the p-quantile from the hypoexponential distribution
+The p-quantile from the hypo-exponential distribution is computed implicitly by computing the root of H(x) = F(x) - p,
+where F is the distribution function of the hypo-exponential distribution
 }
 
