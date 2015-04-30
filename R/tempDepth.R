@@ -97,12 +97,80 @@ generateCandidates <- function(center, range = c(0.5, 1.5), steps = center * 0.0
 #' 
 #' @param theta numeric vector of length two or four with link function's parameters
 #' @param x values of influental variable for the link function
-#' @param y values of depedent variable
+#' @param y values of dependent variable
 #' @return vector of residuals
 computeResiduals <- function(theta, x, y) {
-  y - log(2) * 1 / lambda(x = x, theta = theta)
+  y - log(2) * 1 / predfat:::lambda(x = x, theta = theta)
 }
 
-confidenceSet <- function(x, t, theta) {
-  
+#' Computation of a confidence set for the parameter theta in a two dimensional linear model based on data depth
+#' 
+#' @param theta two-dimensional parameter of linear model
+#' @param x values of influental variable for the link function 
+#' @param y value of dependent variable
+#' @param alpha value in (0,1) defining the level of the test
+#' @param ... further arguments passed to \code{generateCandidates}
+#' @return confidence set for the two-dimensional parameter
+confidenceSet <- function(theta, x, t, alpha = .05, ...) {
+  require(rexpar)
+  candidates <- generateCandidates(theta, ...)
+  residuals <- apply(candidates, 1, computeResiduals, x = x, y = t)
+  testFullDepth <- apply(residuals, 2, function(x) dS_lin2_test(dS = dS_lin2(resy = x), alpha = alpha, y = t)$phi)
+  candidates[!testFullDepth, ]
 }
+
+piDepth <- function(stresses, deltat, truss, start, toPred, plot = FALSE, xlim) {
+  stopifnot(L <= L_max)
+  stopifnot(L > length(x0))
+  l <- length(stresses[[truss]])
+  x0 <- stresses[[truss]][(l - (toPred - 1)):l]
+  t0 <- deltat[[truss]][(l - (toPred - 1)):l]
+  backup <- stresses
+  stresses[[truss]] <- stresses[[truss]][-((l - (toPred - 1)):l)]
+  deltat[[truss]] <- deltat[[truss]][-((l - (toPred - 1)):l)]
+  
+  x <- unlist(stresses)
+  t <- unlist(deltat)
+  
+  estimation <- estML(x = x, t = t, start = start)
+  theta <- estimation$optimum$par
+  
+  confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha)
+  lambdas <- apply(confSet, 1,  function(theta) exp(-theta[1] + theta[2]*x0))  
+  
+  getQuantiles <- function(rates) {
+    bLower <- sdprisk:::qhypoexp(p = alpha/2, rate = rates, interval = c(0, 10^10))
+    bUpper <- sdprisk:::qhypoexp(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))
+    return(c(bLower, bUpper))
+  }
+  
+  quantiles <- apply(lambdas, 2, 
+                     function(x) vapply(seq_along(x), function(y) getQuantiles(x[1:y]), FUN.VALUE = numeric(2)))
+  lower <- seq(1, toPred * 2, by = 2)
+  upper <- lower + 1
+  lowerBounds <- vapply(lower, function(x) min(quantiles[x, ]), FUN.VALUE = numeric(1))
+  upperBounds <- vapply(upper, function(x) max(quantiles[x, ]), FUN.VALUE = numeric(1))
+  
+  if (plot) {
+    if (missing(xlim)) {
+      xlim <- c(0, (max(cumsum(deltat[[truss]])) + max(upperBounds))/1000000)
+    }
+    unten <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ lowerBounds
+    oben <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ upperBounds
+    
+    plot(x = c(0, cumsum(deltat[[truss]]), unten)/1000000, y = c(0, seq_along(cumsum(c(deltat[[truss]], t0)))),
+         lty = 2, type = "s", col = "red", xlab = "Cycle loads in millions", ylim = c(0, length(backup[[truss]])), 
+         xlim = xlim, lwd = 2, ylab = "Number of broken tension wires")
+    title(bquote((1 - .(alpha))^2 ~ plain("prediction intervals for" ~ .(names(backup[truss])))))
+    points(x = c(0, cumsum(deltat[[truss]]), oben)/1000000, y = c(0, seq_along(cumsum(c(deltat[[truss]], t0)))),
+           lty = 2, type = "s", col = "red", lwd = 2)
+    
+    points(x = c(0, cumsum(deltat[[truss]])/1000000), y = c(0, seq_along(cumsum(deltat[[truss]]))),
+           type = "s", lwd = 3)
+    
+    ## add true jumps:
+    points(x = c(0, cumsum(c(deltat[[truss]], t0)))/1000000, y = c(0, seq_along(cumsum(c(deltat[[truss]], t0)))),
+           lty = 2, type = "s", lwd = 2)
+  }
+}
+
