@@ -1,4 +1,4 @@
- #' Compute prediction intervals for state dependent Poisson process for beam experiments
+#' Compute prediction intervals for state dependent Poisson process for beam experiments
 #'
 #' @param stresses list of values of the influental variable for indepedent fatigue experiments.
 #' @param deltat list of waiting times for indepedent fatigue experiments
@@ -31,8 +31,12 @@ predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE,
   jumps <- c(0, seq_along(cumsum(c(deltat[[truss]], t0))))
   PI <- intervals
   PI[PI < 0] <- max(PI[1,])
-  lower <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ PI[1,]
-  upper <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ PI[2,]
+  tObserved <- cumsum(deltat[[truss]])[length(deltat[[truss]])]
+  if (length(tObserved) == 0) {
+    tObserved <- rep(0, length(PI[1, ]))
+  }
+  lower <- tObserved + PI[1, ]
+  upper <- tObserved + PI[2, ]
   if (plot) {
     if (plotControl$stairs == FALSE) {
       plotData(x, t, xlim = c(0, max(unlist(backup))))
