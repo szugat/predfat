@@ -1,4 +1,4 @@
-#' Compute prediction intervals for state dependent Poisson process for beam experiments
+ #' Compute prediction intervals for state dependent Poisson process for beam experiments
 #'
 #' @param stresses list of values of the influental variable for indepedent fatigue experiments.
 #' @param deltat list of waiting times for indepedent fatigue experiments
@@ -28,7 +28,11 @@ predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE,
                  alpha = 0.05, I = estimation$I, withSolve = withSolve)
   intervals <- sapply(test, function(x) x$interval)
   quantiles <- vapply(test, function(x) x$quantiles, FUN.VALUE = numeric(2))
-  
+  jumps <- c(0, seq_along(cumsum(c(deltat[[truss]], t0))))
+  PI <- intervals
+  PI[PI < 0] <- max(PI[1,])
+  lower <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ PI[1,]
+  upper <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ PI[2,]
   if (plot) {
     if (plotControl$stairs == FALSE) {
       plotData(x, t, xlim = c(0, max(unlist(backup))))
@@ -49,11 +53,6 @@ predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE,
                col = c("red", "red"))
       }
     } else {
-      PI <- intervals
-      PI[PI < 0] <- max(PI[1,])
-      lower <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ PI[1,]
-      upper <- cumsum(deltat[[truss]])[length(deltat[[truss]])]+ PI[2,]
-      
       if (all(plotControl$xlim == c(0,0))) {
         plotControl$xlim <- c(0, (max(cumsum(deltat[[truss]])) + max(intervals))/1000000)
       }
@@ -79,6 +78,6 @@ predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE,
       }
     }
   }
-  return(list(theta = estimation$optimum$par, predictionIntervals = intervals, deltat = deltat[[truss]],
-              t0 = t0, quantiles = quantiles))
+  return(list(theta = estimation$optimum$par, predictionIntervals = rbind(lower, upper), deltat = deltat[[truss]],
+              t0 = t0, quantiles = quantiles, jumps = jumps[(l-toPred + 2):(l+1)], lastJump = c(cumsum(deltat[[truss]])[l-toPred], jumps[l-toPred + 1])))
 }
