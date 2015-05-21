@@ -10,7 +10,7 @@
 #' @param plotControl list with arguments for plot: stairs (logical, plot as step function), xlim, legend (logical, generate legend)
 #' @export
 predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE, 
-                    plotControl = list(stairs = TRUE, xlim = c(0,0), legend = TRUE), withSolve = TRUE){ 
+                    plotControl = list(stairs = TRUE, xlim = c(0,0), legend = TRUE), withSolve = TRUE, alpha){ 
   # toPred = 1: predict next jump, toPred = 2: predict next two jumps
   # truss in {1, ..., 8}: prediction for which steel truss
   l <- length(stresses[[truss]])
@@ -25,7 +25,7 @@ predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE,
   
   estimation <- estML(x = x, t = t, start = start)
   test <- compPI(x0 = x0, L = length(x0) + toPred, L_max = 35L, theta = estimation$optimum$par, 
-                 alpha = 0.05, I = estimation$I, withSolve = withSolve)
+                 alpha = alpha, I = estimation$I, withSolve = withSolve)
   intervals <- sapply(test, function(x) x$interval)
   quantiles <- vapply(test, function(x) x$quantiles, FUN.VALUE = numeric(2))
   jumps <- c(0, seq_along(cumsum(c(deltat[[truss]], t0))))
