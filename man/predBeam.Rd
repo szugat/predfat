@@ -6,7 +6,7 @@
 \usage{
 predBeam(stresses, deltat, truss, start, toPred, plot = FALSE,
   plotControl = list(stairs = TRUE, xlim = c(0, 0), legend = TRUE),
-  withSolve = TRUE)
+  withSolve = TRUE, alpha)
 }
 \arguments{
 \item{stresses}{list of values of the influental variable for indepedent fatigue experiments.}
