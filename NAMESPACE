@@ -2,5 +2,6 @@
 
 export(compPI)
 export(estML)
+export(piBeam)
 export(plotData)
 export(predBeam)

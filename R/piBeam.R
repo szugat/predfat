@@ -8,7 +8,8 @@
 #' @param plot logical value indicating whether the prediction intervals should be plotted or not
 #' @param method one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta
 #' @export
-piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "chisquared"), plot = FALSE, xlim, alpha = .05) {
+piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "chisquared"), plot = FALSE, 
+                   xlim, alpha = .05, addTrue = TRUE) {
   # stopifnot(L <= L_max)
   #  stopifnot(L > length(x0))
   method <- match.arg(method)
@@ -50,7 +51,7 @@ piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "
   jumps <- c(0, seq_along(cumsum(c(deltat[[truss]], t0))))
   if (plot) {
     if (missing(xlim)) {
-      xlim <- c(0, max(oben))/1000000 
+      xlim <- c(0, max(oben, na.rm = TRUE))/1000000 
     }
     
     plot(x = c(0, cumsum(deltat[[truss]]), unten)/1000000, y = jumps,
@@ -64,8 +65,10 @@ piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "
            type = "s", lwd = 3)
     
     ## add true jumps:
+    if (addTrue) {
     points(x = c(0, cumsum(c(deltat[[truss]], t0)))/1000000, y = c(0, seq_along(cumsum(c(deltat[[truss]], t0)))),
            lty = 2, type = "s", lwd = 2)
+    }
   }
   return(list(theta = theta, PI = rbind(unten, oben), jumps = jumps[(l-toPred + 2):(l+1)],
               lastJump = c(cumsum(deltat[[truss]])[l-toPred], jumps[l-toPred + 1])))

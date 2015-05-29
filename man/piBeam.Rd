@@ -5,7 +5,7 @@
 \title{Compute prediction intervals for state dependent Poisson process for beam experiments}
 \usage{
 piBeam(stresses, deltat, truss, start, toPred, method = c("depth",
-  "chisquared"), plot = FALSE, xlim, alpha = 0.05)
+  "chisquared"), plot = FALSE, xlim, alpha = 0.05, addTrue = TRUE)
 }
 \arguments{
 \item{stresses}{list of values of the influental variable for indepedent fatigue experiments.}
