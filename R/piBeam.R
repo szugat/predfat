@@ -6,7 +6,6 @@
 #' @param start starting value for the optimization, length four
 #' @param toPred integer value indicating the number of events to be predicted
 #' @param plot logical value indicating whether the prediction intervals should be plotted or not
-#' @param withSolve logical value indicating whether the information matrix should be inverted with solve() (TRUE) or ginv() from MASS package (FALSE)
 #' @param method one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta
 #' @export
 piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "chisquared"), plot = FALSE, xlim, alpha = .05) {
@@ -41,8 +40,8 @@ piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "
                      function(x) vapply(seq_along(x), function(y) getQuantiles(x[1:y]), FUN.VALUE = numeric(2)))
   lower <- seq(1, toPred * 2, by = 2)
   upper <- lower + 1
-  lowerBounds <- vapply(lower, function(x) min(quantiles[x, ], na.rm = TRUE), FUN.VALUE = numeric(1))
-  upperBounds <- vapply(upper, function(x) max(quantiles[x, ], na.rm = TRUE), FUN.VALUE = numeric(1))
+  lowerBounds <- vapply(lower, function(x) min(quantiles[x, ]), FUN.VALUE = numeric(1))
+  upperBounds <- vapply(upper, function(x) max(quantiles[x, ]), FUN.VALUE = numeric(1))
   tObserved <- cumsum(deltat[[truss]])[length(deltat[[truss]])] 
   if (length(tObserved) ==  0)
     tObserved <- rep(0, length(lowerBounds))
