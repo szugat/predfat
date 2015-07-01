@@ -1,14 +1,17 @@
-#' Computation of a confidence set for the parameter theta in a two dimensional linear model based on data depth
+#' Computation of a confidence set for the parameter theta in a two dimensional linear model based on grid search
 #' 
+#' @param candidates grid of candidates for confidence set
 #' @param theta two-dimensional parameter of linear model
 #' @param x values of influental variable for the link function 
 #' @param y value of dependent variable
 #' @param alpha value in (0,1) defining the level of the test
 #' @param ... further arguments passed to \code{generateCandidates}
 #' @return confidence set for the two-dimensional parameter
-confidenceSet <- function(theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, ...) {
+confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, ...) {
   method <- match.arg(method)
-  candidates <- generateCandidates(theta, ...)
+  if (missing(candidates)) {
+    candidates <- generateCandidates(theta, ...)
+  }
   
   if (method == "depth") {
     require(rexpar)
