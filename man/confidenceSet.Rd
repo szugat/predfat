@@ -2,12 +2,14 @@
 % Please edit documentation in R/confidenceSet.R
 \name{confidenceSet}
 \alias{confidenceSet}
-\title{Computation of a confidence set for the parameter theta in a two dimensional linear model based on data depth}
+\title{Computation of a confidence set for the parameter theta in a two dimensional linear model based on grid search}
 \usage{
-confidenceSet(theta, method = c("depth", "chisquared"), x, t = NULL,
-  alpha = 0.05, ...)
+confidenceSet(candidates, theta, method = c("depth", "chisquared"), x,
+  t = NULL, alpha = 0.05, ...)
 }
 \arguments{
+\item{candidates}{grid of candidates for confidence set}
+
 \item{theta}{two-dimensional parameter of linear model}
 
 \item{x}{values of influental variable for the link function}
@@ -22,6 +24,6 @@ confidenceSet(theta, method = c("depth", "chisquared"), x, t = NULL,
 confidence set for the two-dimensional parameter
 }
 \description{
-Computation of a confidence set for the parameter theta in a two dimensional linear model based on data depth
+Computation of a confidence set for the parameter theta in a two dimensional linear model based on grid search
 }
 
