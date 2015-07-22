@@ -1,5 +1,6 @@
 #' Maximum likelihood estimation of parameters in link function for the exponential distribution
 #' 
+#' @param link a function(theta, log) used in the likelihood which is \eqn{L(\theta) = \sum t * \lambda(x) - log(\lambda(x))}, where log = TRUE refers to term at the end
 #' @param x values of influental variable for the link function
 #' @param t values of dependent variable
 #' @param start starting solution for optim()
@@ -7,26 +8,17 @@
 #' @return optimal solution for the parameter in the link function in optimum and estimated 
 #'         information matrix in I
 #' @export
-estML <- function(x, t, start, ...){
+estML <- function(link, type = 1, x, t, start, ...){
   ## link function
-  link <- function(theta, log = FALSE){
-    if (length(start) == 4) {
-      h <- -theta[1] + theta[2] * x - theta[3] * x^(-theta[4])
-    } else if (length(start) == 2) {
-      h <- -theta[1] + theta[2] * x
-    }
-    if(log){
-      return(h)
-    } else{
-      return(exp(h))
-    } 
+  if (missing(link)) {
+    link <- linkfun(type)
   }
   
   ## objective function
   loglike <- function(theta){
-    sum(t * link(theta = theta, log = FALSE) - link(theta = theta, log = TRUE))
+    sum(t * exp(link(theta = theta, x = x)) - link(theta = theta, x = x))
   }
   thetahat <- optim(par = start, fn = loglike, ...)
-  information <- estI(x, theta = thetahat$par)
+  information <- predfat:::estI(x, theta = thetahat$par)
   return(list(optimum = thetahat, I = information))
 }

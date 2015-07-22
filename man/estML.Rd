@@ -4,9 +4,11 @@
 \alias{estML}
 \title{Maximum likelihood estimation of parameters in link function for the exponential distribution}
 \usage{
-estML(x, t, start, ...)
+estML(link, x, t, start, ...)
 }
 \arguments{
+\item{link}{a function(theta, log) used in the likelihood which is \eqn{L(\theta) = \sum t * \lambda(x) - log(\lambda(x))}}
+
 \item{x}{values of influental variable for the link function}
 
 \item{t}{values of dependent variable}
