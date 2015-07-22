@@ -49,6 +49,9 @@ piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "
   unten <- tObserved + lowerBounds
   oben <- tObserved + upperBounds
   unten[is.na(oben)] <- NA
+  # when lower boundary gets smaller set to NA, because this does not make sense
+  unten[which(diff(unten) < 0)] <- NA
+  oben[is.na(unten)] <- NA
   jumps <- c(0, seq_along(cumsum(c(deltat[[truss]], t0))))
   if (plot) {
     if (missing(xlim)) {
