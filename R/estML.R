@@ -20,8 +20,8 @@ estML <- function(x, t, delta, link, type = 1, start, ...){
   }
   ## objective function
   loglike <- function(theta){
-   sum(delta * (t * exp(link(theta = theta, x = x)) - link(theta = theta, x = x))) + # density function
-      sum((1 - delta) * exp(-link(theta = theta, x = x)) * t) # survival function
+    sum(delta * (t * exp(link(theta = theta, x = x)) - link(theta = theta, x = x)) + # density function
+       (1 - delta) * exp(link(theta = theta, x = x)) * t) # survival function
   }
   thetahat <- optim(par = start, fn = loglike, ...)
   information <- predfat:::estI(x, theta = thetahat$par)
