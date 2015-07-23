@@ -1,4 +1,7 @@
-## Link functions:
+#' A collection of link functions for the estimation of S-N-Curves. 
+#' 
+#' @param type integer (1-6) indicating the desired link function
+#' @return function(theta, x)
 linkfun <- function(type) {
   if (type == 1) { # nonlinear
     res <- function(theta, x) {
