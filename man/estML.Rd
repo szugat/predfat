@@ -4,14 +4,16 @@
 \alias{estML}
 \title{Maximum likelihood estimation of parameters in link function for the exponential distribution}
 \usage{
-estML(link, x, t, start, ...)
+estML(x, t, delta, link, type = 1, start, ...)
 }
 \arguments{
-\item{link}{a function(theta, log) used in the likelihood which is \eqn{L(\theta) = \sum t * \lambda(x) - log(\lambda(x))}}
-
 \item{x}{values of influental variable for the link function}
 
 \item{t}{values of dependent variable}
+
+\item{delta}{vector indicating of length length(t) indicating if the respective observation in t is completely observed (1) or censored (0)}
+
+\item{link}{a function(theta, log) used in the likelihood which is \eqn{L(\theta) = \sum t * \lambda(x) - log(\lambda(x))}}
 
 \item{start}{starting solution for optim()}
 
