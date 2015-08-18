@@ -7,20 +7,28 @@
 #' @param alpha value in (0,1) defining the level of the test
 #' @param ... further arguments passed to \code{generateCandidates}
 #' @return confidence set for the two-dimensional parameter
-confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, ...) {
+confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, lambda, gradient, type, ...) {
   method <- match.arg(method)
   if (missing(candidates)) {
     candidates <- generateCandidates(theta, ...)
   }
   
+  if (missing(lambda)) {
+    lambda <- linkfun(type)
+  }
+  
+  if (missing(gradient)) {
+    gradient <- gradLambda(type)
+  }
+  
   if (method == "depth") {
     require(rexpar)
-    residuals <- apply(candidates, 1, computeResiduals, x = x, y = t)
+    residuals <- apply(candidates, 1, computeResiduals, x = x, y = t,  lambda = lambda)
     testCandidates <- apply(residuals, 2, function(x) dS_lin2_test(dS = dS_lin2(resy = x), alpha = alpha, y = t)$phi)
   }
   
   if (method == "chisquared") {
-    I <- predfat:::estI(x = x, theta = theta)
+    I <- predfat:::estI(x = x, theta = theta, lambda = lambda, gradient = gradient)
     diffs <- apply(candidates, 1, function(x) theta - x)
     testCandidates <- apply(diffs, 2, function(x) t(x) %*% I %*% x > qchisq(1 - alpha, df = length(theta)))
   }
