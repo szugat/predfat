@@ -9,7 +9,7 @@
 #' @param type [\code{integer}]\cr
 #'        if link function is not given a collection of given link function is available, see \code{\link{linkfun}}
 #' @return estimated information matrix
-estI <- function(x, theta, lambda, gradient, type){
+estI <- function(x, theta, lambda, gradient, link, type){
   if (missing(gradient)) {
     gradient <- gradLambda(type)
   }
