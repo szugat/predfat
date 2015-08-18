@@ -16,7 +16,7 @@ getFit <- function(newdata, theta, lambda, type, plot = FALSE, median = FALSE){
     theta <- c(theta, 0, 1)
   }
   
-  fitted <- lambda(x = newdata, theta = theta)/log(10)
+  fitted <- -lambda(x = newdata, theta = theta)/log(10)
   
   if (median) {
     fitted <- log10(log(2)) + fitted
