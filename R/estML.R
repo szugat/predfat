@@ -4,6 +4,8 @@
 #' @param t values of dependent variable
 #' @param delta vector indicating of length length(t) indicating if the respective observation in t is completely observed (1) or censored (0)
 #' @param link a function(theta, log) used in the likelihood which is \eqn{L(\theta) = \sum t * \lambda(x) - log(\lambda(x))}
+#' @param type [\code{integer}]\cr
+#'        if link function is not given a collection of given link function is available, see \code{\link{linkfun}}
 #' @param start starting solution for optim()
 #' @param ... further paraments passed to optim()
 #' @return optimal solution for the parameter in the link function in optimum and estimated 
