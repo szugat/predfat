@@ -5,6 +5,12 @@
 #' @param x values of influental variable for the link function 
 #' @param y value of dependent variable
 #' @param alpha value in (0,1) defining the level of the test
+#' @param lambda [\code{function(theta, x)}]\cr
+#'        link function for exponential distribution
+#' @param gradient [\code{function(x, theta, ...)}]\cr
+#'        gradient of link function
+#' @param type [\code{integer}]\cr
+#'        if link function is not given a collection of given link function is available, see \code{\link{linkfun}}
 #' @param ... further arguments passed to \code{generateCandidates}
 #' @return confidence set for the two-dimensional parameter
 confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, lambda, gradient, type, ...) {
