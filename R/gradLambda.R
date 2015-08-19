@@ -13,6 +13,7 @@ gradLambda <- function(type = 4) {
       if ((length(theta) == 2) || theta[3] == 0) {
         lambdaDot <- lambdaDot[,1:2]
       }
+      return(lambdaDot)
     }
   }
   
@@ -20,9 +21,9 @@ gradLambda <- function(type = 4) {
     res <- function(x, theta) {
       lambda <- linkfun(type)
       lambdaValue <- exp(lambda(x, theta))
-      lambdaDot <- cbind(-lambdaValue,
-                         lambdaValue * x,
-                         lambdavalue * log(x))
+      cbind(-lambdaValue,
+            lambdaValue * x,
+            lambdavalue * log(x))
     }
   }
   return(res)
