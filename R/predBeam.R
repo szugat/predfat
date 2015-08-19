@@ -36,7 +36,7 @@ predBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, typ
   t <- unlist(deltat)
   
   estimation <- estML(x = x, t = t, start = start, link = link)
-  test <- compPI(xNew = x0, L_max = 35L, theta = estimation$optimum$par, 
+  test <- compPI(xNew = x0, L_max = 35L, theta = estimation$optimum$par, lambda = link, gradient = gradient,
                  alpha = alpha, I = estimation$I, withSolve = withSolve)
   intervals <- sapply(test, function(x) x$interval)
   quantiles <- vapply(test, function(x) x$quantiles, FUN.VALUE = numeric(2))
