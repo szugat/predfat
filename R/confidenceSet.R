@@ -38,6 +38,5 @@ confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), 
     diffs <- apply(candidates, 1, function(x) theta - x)
     testCandidates <- apply(diffs, 2, function(x) t(x) %*% I %*% x > qchisq(1 - alpha, df = length(theta)))
   }
-  
   candidates[!testCandidates, ]
 }

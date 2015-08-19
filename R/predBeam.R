@@ -5,14 +5,26 @@
 #' @param truss index of list entry in stresses and deltat for which the prediction should be made
 #' @param start starting value for the optimization, length four
 #' @param toPred integer value indicating the number of events to be predicted
+#' @param link link function for the negative (!) logarithmized mean of the exponential distribution
+#' @param gradient gradient of link function w.r.t. parameters
+#' @param type if link or gradient are not given, there is collection of implented link functions and gradients, see \code{\link{linkfun}} and \code{\link{gradLambda}}
 #' @param plot logical value indicating whether the prediction intervals should be plotted or not
 #' @param withSolve logical value indicating whether the information matrix should be inverted with solve() (TRUE) or ginv() from MASS package (FALSE)
 #' @param plotControl list with arguments for plot: stairs (logical, plot as step function), xlim, legend (logical, generate legend)
 #' @export
-predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE, 
+predBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type, plot = FALSE, 
                     plotControl = list(stairs = TRUE, xlim = c(0,0), legend = TRUE), withSolve = TRUE, alpha){ 
   # toPred = 1: predict next jump, toPred = 2: predict next two jumps
-  # truss in {1, ..., 8}: prediction for which steel truss
+  # truss in {1, ..., 9}: prediction for which steel truss
+  
+  if (missing(link)) {
+    link <- linkfun(type)
+  }
+  
+  if (missing(gradient)) {
+    gradient <- gradLambda(type)
+  }
+  
   l <- length(stresses[[truss]])
   x0 <- stresses[[truss]][(l - (toPred - 1)):l]
   t0 <- deltat[[truss]][(l - (toPred - 1)):l]
@@ -23,7 +35,7 @@ predBeam <- function(stresses, deltat, truss, start, toPred, plot = FALSE,
   x <- unlist(stresses)
   t <- unlist(deltat)
   
-  estimation <- estML(x = x, t = t, start = start)
+  estimation <- estML(x = x, t = t, start = start, link = link)
   test <- compPI(xNew = x0, L_max = 35L, theta = estimation$optimum$par, 
                  alpha = alpha, I = estimation$I, withSolve = withSolve)
   intervals <- sapply(test, function(x) x$interval)
