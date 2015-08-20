@@ -8,10 +8,15 @@
 #' @param plot logical value indicating whether the prediction intervals should be plotted or not
 #' @param method one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta
 #' @export
-piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "chisquared"), plot = FALSE, 
+piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type, method = c("depth", "chisquared"), plot = FALSE, 
                    xlim, alpha = .05, addTrue = TRUE) {
-  # stopifnot(L <= L_max)
-  #  stopifnot(L > length(x0))
+  if (missing(link)) {
+    link <- linkfun(type)
+  }
+  
+  if (missing(gradient)) {
+    gradient <- gradLambda(type)
+  }
   method <- match.arg(method)
   l <- length(stresses[[truss]])
   x0 <- stresses[[truss]][(l - (toPred - 1)):l]
@@ -23,11 +28,12 @@ piBeam <- function(stresses, deltat, truss, start, toPred, method = c("depth", "
   x <- unlist(stresses)
   t <- unlist(deltat)
   
-  estimation <- estML(x = x, t = t, start = start)
+  estimation <- estML(x = x, t = t, start = start, link = link)
   theta <- estimation$optimum$par
   
-  confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method)
-  lambdas <- apply(confSet, 1,  function(y) exp(-y[1] + y[2]*x0))  
+  confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method, lambda = link, gradient = gradient)
+  lambdas <- apply(confSet, 1, function(y) exp(link(x0, theta)))
+  #lambdas <- apply(confSet, 1,  function(y) exp(-y[1] + y[2]*x0))  
   if (is.vector(lambdas))
     lambdas <- t(lambdas)
   
