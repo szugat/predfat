@@ -15,6 +15,9 @@ estML(x, t, delta, link, type = 1, start, ...)
 
 \item{link}{a function(theta, log) used in the likelihood which is \eqn{L(\theta) = \sum t * \lambda(x) - log(\lambda(x))}}
 
+\item{type}{[\code{integer}]\cr
+if link function is not given a collection of given link function is available, see \code{\link{linkfun}}}
+
 \item{start}{starting solution for optim()}
 
 \item{...}{further paraments passed to optim()}

@@ -4,12 +4,21 @@
 \alias{estI}
 \title{Estimation of information matrix}
 \usage{
-estI(x, theta)
+estI(x, theta, lambda, gradient, type)
 }
 \arguments{
 \item{x}{values of influental variable for the link function}
 
 \item{theta}{numeric vector of length four with link function's parameters}
+
+\item{lambda}{[\code{function(theta, x)}]\cr
+link function for exponential distribution}
+
+\item{gradient}{[\code{function(x, theta, ...)}]\cr
+gradient of link function}
+
+\item{type}{[\code{integer}]\cr
+if link function is not given a collection of given link function is available, see \code{\link{linkfun}}}
 }
 \value{
 estimated information matrix

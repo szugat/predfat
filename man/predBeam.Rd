@@ -4,9 +4,9 @@
 \alias{predBeam}
 \title{Compute prediction intervals for state dependent Poisson process for beam experiments}
 \usage{
-predBeam(stresses, deltat, truss, start, toPred, plot = FALSE,
-  plotControl = list(stairs = TRUE, xlim = c(0, 0), legend = TRUE),
-  withSolve = TRUE, alpha)
+predBeam(stresses, deltat, truss, start, toPred, link, gradient, type,
+  plot = FALSE, plotControl = list(stairs = TRUE, xlim = c(0, 0), legend =
+  TRUE), withSolve = TRUE, alpha)
 }
 \arguments{
 \item{stresses}{list of values of the influental variable for indepedent fatigue experiments.}
@@ -18,6 +18,12 @@ predBeam(stresses, deltat, truss, start, toPred, plot = FALSE,
 \item{start}{starting value for the optimization, length four}
 
 \item{toPred}{integer value indicating the number of events to be predicted}
+
+\item{link}{link function for the negative (!) logarithmized mean of the exponential distribution}
+
+\item{gradient}{gradient of link function w.r.t. parameters}
+
+\item{type}{if link or gradient are not given, there is collection of implented link functions and gradients, see \code{\link{linkfun}} and \code{\link{gradLambda}}}
 
 \item{plot}{logical value indicating whether the prediction intervals should be plotted or not}
 

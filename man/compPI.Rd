@@ -4,7 +4,8 @@
 \alias{compPI}
 \title{Computation of prediction intervals}
 \usage{
-compPI(xNew, x0, L, L_max = 35L, theta, alpha, I, withSolve = TRUE)
+compPI(xNew, x0, L, L_max = 35L, theta, lambda, gradient, type, alpha, I,
+  withSolve = TRUE)
 }
 \arguments{
 \item{xNew}{values of influential variable}
@@ -17,11 +18,17 @@ compPI(xNew, x0, L, L_max = 35L, theta, alpha, I, withSolve = TRUE)
 
 \item{theta}{numeric vector of length four with link function's parameters}
 
+\item{gradient}{gradient of link function w.r.t. parameters}
+
+\item{type}{if link or gradient are not given, there is collection of implented link functions and gradients, see \code{\link{linkfun}} and \code{\link{gradLambda}}}
+
 \item{alpha}{confidence niveau in (0,1)}
 
 \item{I}{information matrix}
 
 \item{withSolve}{logical value indicating if inverting of information matrix with solve() or ginv() from MASS}
+
+\item{link}{link function for the negative (!) logarithmized mean of the exponential distribution}
 }
 \value{
 list with prediction interval bounds and corresponding quantiles of hypoexponential

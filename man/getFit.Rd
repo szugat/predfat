@@ -4,12 +4,18 @@
 \alias{getFit}
 \title{Computation of fitted values for new data}
 \usage{
-getFit(newdata, theta, plot = FALSE, median = FALSE)
+getFit(newdata, theta, lambda, type, plot = FALSE, median = FALSE)
 }
 \arguments{
 \item{newdata}{values of influental variable}
 
 \item{theta}{parameter vector for link function}
+
+\item{lambda}{[\code{function(theta, x)}]\cr
+link function for exponential distribution}
+
+\item{type}{[\code{integer}]\cr
+if link function is not given a collection of given link function is available, see \code{\link{linkfun}}}
 
 \item{plot}{logical value indicating whether the fitted values should be added to an existing plot}
 

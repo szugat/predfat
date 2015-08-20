@@ -5,7 +5,7 @@
 \title{Computation of a confidence set for the parameter theta in a two dimensional linear model based on grid search}
 \usage{
 confidenceSet(candidates, theta, method = c("depth", "chisquared"), x,
-  t = NULL, alpha = 0.05, ...)
+  t = NULL, alpha = 0.05, lambda, gradient, type, ...)
 }
 \arguments{
 \item{candidates}{grid of candidates for confidence set}
@@ -15,6 +15,15 @@ confidenceSet(candidates, theta, method = c("depth", "chisquared"), x,
 \item{x}{values of influental variable for the link function}
 
 \item{alpha}{value in (0,1) defining the level of the test}
+
+\item{lambda}{[\code{function(theta, x)}]\cr
+link function for exponential distribution}
+
+\item{gradient}{[\code{function(x, theta, ...)}]\cr
+gradient of link function}
+
+\item{type}{[\code{integer}]\cr
+if link function is not given a collection of given link function is available, see \code{\link{linkfun}}}
 
 \item{...}{further arguments passed to \code{generateCandidates}}
 

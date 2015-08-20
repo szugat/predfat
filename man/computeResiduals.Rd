@@ -4,7 +4,7 @@
 \alias{computeResiduals}
 \title{Residuals of fitted median of exponential distribution used for data depth}
 \usage{
-computeResiduals(theta, x, y)
+computeResiduals(theta, x, y, lambda, type)
 }
 \arguments{
 \item{theta}{numeric vector of length two or four with link function's parameters}
@@ -12,6 +12,15 @@ computeResiduals(theta, x, y)
 \item{x}{values of influental variable for the link function}
 
 \item{y}{values of dependent variable}
+
+\item{lambda}{[\code{function(theta, x)}]\cr
+link function for exponential distribution}
+
+\item{type}{[\code{integer}]\cr
+if link function is not given a collection of given link function is available, see \code{\link{linkfun}}}
+
+\item{gradient}{[\code{function(x, theta, ...)}]\cr
+gradient of link function}
 }
 \value{
 vector of residuals

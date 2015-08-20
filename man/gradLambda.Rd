@@ -2,19 +2,17 @@
 % Please edit documentation in R/gradLambda.R
 \name{gradLambda}
 \alias{gradLambda}
-\title{Gradient of link function with respect to parameter theta}
+\title{Collection of gradient functions of link function for exponential distribution}
 \usage{
-gradLambda(x, theta)
+gradLambda(type = 4)
 }
 \arguments{
-\item{x}{value of influental variable for the link function}
-
-\item{theta}{numeric vector of length four with link function's parameters}
+\item{type}{integer (1-6) indicating the desired link function, see \code{\link{linkfun}}}
 }
 \value{
 gradient of link function at x with respect to theta
 }
 \description{
-Gradient of link function with respect to parameter theta
+Collection of gradient functions of link function for exponential distribution
 }
 
