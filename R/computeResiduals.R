@@ -14,5 +14,5 @@ computeResiduals <- function(theta, x, y, lambda, type) {
   if (missing(lambda)) {
     lambda <- linkfun(type)
   }
-  y - log(2) * 1 / exp(lambda(x = x, theta = theta))
+  y - (log(2) / exp(lambda(x = x, theta = theta)))
 }
