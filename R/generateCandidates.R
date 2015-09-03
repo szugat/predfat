@@ -6,7 +6,10 @@
 #' @param steps numeric value indicating the step width of the grid
 #' @return grid around \code{center} using \code{expand.grid}
 generateCandidates <- function(center, range = c(0.5, 1.5), steps = center * 0.05) {
-  x <- seq(center[1] * range[1], center[1] * range[2], by = steps[1])
-  y <- seq(center[2] * range[1], center[2] * range[2], by = steps[2])
-  expand.grid(x, y)
+  p <- length(center)
+  seqs <- vector(mode = "list", p)
+  for(i in seq_along(seqs)) {
+    seqs[[i]] <- seq(center[i] * range[1], center[i] * range[2], by = steps[i])
+  }
+  do.call("expand.grid", seqs)
 }
