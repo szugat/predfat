@@ -15,7 +15,7 @@
 #' @param method one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta
 #' @export
 piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type, method = c("depth", "chisquared"), plot = FALSE, 
-                   xlim, alpha = .05, addTrue = TRUE) {
+                   xlim, alpha = .05, addTrue = TRUE, ...) {
   if (missing(link)) {
     link <- linkfun(type)
   }
@@ -37,7 +37,7 @@ piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type,
   estimation <- estML(x = x, t = t, start = start, link = link, gradient = gradient)
   theta <- estimation$optimum$par
   
-  confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method, lambda = link, gradient = gradient)
+  confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method, lambda = link, gradient = gradient, ...)
   lambdas <- apply(confSet, 1, function(y) exp(link(x = x0, theta = theta)))
   #lambdas <- apply(confSet, 1,  function(y) exp(-y[1] + y[2]*x0))  
   if (is.vector(lambdas))
