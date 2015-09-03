@@ -3,9 +3,8 @@
 #' @return gradient of link function at x with respect to theta 
 gradLambda <- function(type = 4) {
   if (type == 1 || type == 2) {
-    res <- function(x, theta) {
-      lambda <- linkfun(type)
-      lambdaValue <- exp(lambda(x, theta))
+    res <- function(x, theta, lambda) {
+      lambdaValue <- exp(lambda(x = x, theta = theta))
       lambdaDot <- cbind(-lambdaValue,
                          x * lambdaValue,
                          -x^(-theta[4]) * lambdaValue,
@@ -18,12 +17,11 @@ gradLambda <- function(type = 4) {
   }
   
   if (type == 4) {
-    res <- function(x, theta) {
-      lambda <- linkfun(type)
-      lambdaValue <- exp(lambda(x, theta))
+    res <- function(x, theta, lambda) {
+      lambdaValue <- exp(lambda(x = x, theta = theta))
       cbind(-lambdaValue,
             lambdaValue * x,
-            lambdavalue * log(x))
+            lambdaValue * log(x))
     }
   }
   return(res)
