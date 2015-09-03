@@ -4,7 +4,7 @@
 \alias{estML}
 \title{Maximum likelihood estimation of parameters in link function for the exponential distribution}
 \usage{
-estML(x, t, delta, link, type = 1, start, ...)
+estML(x, t, delta, link, gradient, type = 1, start, ...)
 }
 \arguments{
 \item{x}{values of influental variable for the link function}
@@ -14,6 +14,9 @@ estML(x, t, delta, link, type = 1, start, ...)
 \item{delta}{vector indicating of length length(t) indicating if the respective observation in t is completely observed (1) or censored (0)}
 
 \item{link}{a function(theta, log) used in the likelihood which is \eqn{L(\theta) = \sum t * \lambda(x) - log(\lambda(x))}}
+
+\item{gradient}{[\code{function(x, theta, ...)}]\cr
+gradient of link function}
 
 \item{type}{[\code{integer}]\cr
 if link function is not given a collection of given link function is available, see \code{\link{linkfun}}}

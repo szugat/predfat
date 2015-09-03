@@ -4,8 +4,9 @@
 \alias{piBeam}
 \title{Compute prediction intervals for state dependent Poisson process for beam experiments}
 \usage{
-piBeam(stresses, deltat, truss, start, toPred, method = c("depth",
-  "chisquared"), plot = FALSE, xlim, alpha = 0.05, addTrue = TRUE)
+piBeam(stresses, deltat, truss, start, toPred, link, gradient, type,
+  method = c("depth", "chisquared"), plot = FALSE, xlim, alpha = 0.05,
+  addTrue = TRUE)
 }
 \arguments{
 \item{stresses}{list of values of the influental variable for indepedent fatigue experiments.}
@@ -17,6 +18,15 @@ piBeam(stresses, deltat, truss, start, toPred, method = c("depth",
 \item{start}{starting value for the optimization, length four}
 
 \item{toPred}{integer value indicating the number of events to be predicted}
+
+\item{link}{[\code{function(theta, x)}]\cr
+link function for exponential distribution}
+
+\item{gradient}{[\code{function(x, theta, ...)}]\cr
+gradient of link function}
+
+\item{type}{[\code{integer}]\cr
+if link function is not given a collection of given link function is available, see \code{\link{linkfun}}}
 
 \item{method}{one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta}
 
