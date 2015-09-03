@@ -5,6 +5,12 @@
 #' @param truss index of list entry in stresses and deltat for which the prediction should be made
 #' @param start starting value for the optimization, length four
 #' @param toPred integer value indicating the number of events to be predicted
+#' @param link [\code{function(theta, x)}]\cr
+#'        link function for exponential distribution
+#' @param gradient [\code{function(x, theta, ...)}]\cr
+#'        gradient of link function
+#' @param type [\code{integer}]\cr
+#'        if link function is not given a collection of given link function is available, see \code{\link{linkfun}}
 #' @param plot logical value indicating whether the prediction intervals should be plotted or not
 #' @param method one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta
 #' @export
@@ -28,11 +34,11 @@ piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type,
   x <- unlist(stresses)
   t <- unlist(deltat)
   
-  estimation <- estML(x = x, t = t, start = start, link = link)
+  estimation <- estML(x = x, t = t, start = start, link = link, gradient = gradient)
   theta <- estimation$optimum$par
   
   confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method, lambda = link, gradient = gradient)
-  lambdas <- apply(confSet, 1, function(y) exp(link(x0, theta)))
+  lambdas <- apply(confSet, 1, function(y) exp(link(x = x0, theta = theta)))
   #lambdas <- apply(confSet, 1,  function(y) exp(-y[1] + y[2]*x0))  
   if (is.vector(lambdas))
     lambdas <- t(lambdas)
