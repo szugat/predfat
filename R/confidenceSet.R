@@ -13,7 +13,7 @@
 #'        if link function is not given a collection of given link function is available, see \code{\link{linkfun}}
 #' @param ... further arguments passed to \code{generateCandidates}
 #' @return confidence set for the two-dimensional parameter
-confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, lambda, gradient, type, ...) {
+confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, lambda, gradient, type, depthType, ...) {
   method <- match.arg(method)
   if (missing(candidates)) {
     candidates <- generateCandidates(theta, ...)
@@ -29,8 +29,14 @@ confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), 
   
   if (method == "depth") {
     require(rexpar)
-    residuals <- apply(candidates, 1, computeResiduals, x = x, y = t,  lambda = lambda)
-    testCandidates <- apply(residuals, 2, function(x) dS_lin2_test(dS = dS_lin2(resy = x), alpha = alpha, y = t)$phi)
+    residuals <- apply(candidates, 1, computeResiduals, x = x[order(x)], y = t[order(x)],  lambda = lambda)
+    if (length(theta) == 2) {
+      testCandidates <- apply(residuals, 2, function(x) dS_lin2_test(dS = dS_lin2(resy = x), alpha = alpha, y = t)$phi)
+    }
+    
+    if (length(theta) == 3) {
+      testCandidates <- apply(residuals, 2, function(y) depth3Test(residuals = residuals[order(x)], type = depthType, alpha = alpha))
+    }
   }
   
   if (method == "chisquared") {
