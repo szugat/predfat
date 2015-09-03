@@ -6,7 +6,7 @@
 \usage{
 piBeam(stresses, deltat, truss, start, toPred, link, gradient, type,
   method = c("depth", "chisquared"), plot = FALSE, xlim, alpha = 0.05,
-  addTrue = TRUE)
+  addTrue = TRUE, ...)
 }
 \arguments{
 \item{stresses}{list of values of the influental variable for indepedent fatigue experiments.}

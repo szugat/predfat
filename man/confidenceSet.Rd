@@ -5,7 +5,7 @@
 \title{Computation of a confidence set for the parameter theta in a two dimensional linear model based on grid search}
 \usage{
 confidenceSet(candidates, theta, method = c("depth", "chisquared"), x,
-  t = NULL, alpha = 0.05, lambda, gradient, type, ...)
+  t = NULL, alpha = 0.05, lambda, gradient, type, depthType, ...)
 }
 \arguments{
 \item{candidates}{grid of candidates for confidence set}
