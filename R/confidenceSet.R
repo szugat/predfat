@@ -35,7 +35,7 @@ confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), 
     }
     
     if (length(theta) == 3) {
-      testCandidates <- apply(residuals, 2, function(y) depth3Test(residuals = residuals[order(x)], type = depthType, alpha = alpha))
+      testCandidates <- apply(residuals, 2, depth3Test, type = depthType, alpha = alpha)
     }
   }
   
