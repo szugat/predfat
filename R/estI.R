@@ -19,9 +19,10 @@ estI <- function(x, theta, lambda, gradient, type){
   }
   ## gradient of lambda
   helper <- function(y, theta){
-    lambdaValue <- exp(lambda(y, theta))
-    lambdaDot <- drop(gradient(y, theta))
+    lambdaValue <- exp(lambda(x = y, theta = theta))
+    lambdaDot <- drop(gradient(x = y, theta = theta, lambda = lambda))
     mat <- 1/lambdaValue^2 * (lambdaDot %*% t(lambdaDot))
+    return(mat)
   }
   ##1/length(x) * Reduce("+", lapply(x, helper, theta = theta))
   Reduce("+", lapply(x, helper, theta = theta))
