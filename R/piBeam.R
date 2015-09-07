@@ -38,7 +38,7 @@ piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type,
   theta <- estimation$optimum$par
   
   confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method, lambda = link, gradient = gradient, ...)
-  lambdas <- apply(confSet, 1, function(y) exp(link(x = x0, theta = theta)))
+  lambdas <- apply(confSet, 1, function(y) exp(link(x = x0, theta = y)))
   #lambdas <- apply(confSet, 1,  function(y) exp(-y[1] + y[2]*x0))  
   if (is.vector(lambdas))
     lambdas <- t(lambdas)
