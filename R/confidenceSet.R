@@ -13,7 +13,7 @@
 #'        if link function is not given a collection of given link function is available, see \code{\link{linkfun}}
 #' @param ... further arguments passed to \code{generateCandidates}
 #' @return confidence set for the two-dimensional parameter
-confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), x, t = NULL, alpha = .05, lambda, gradient, type, depthType, ...) {
+confidenceSet <- function(candidates, theta, method = c("depth", "chisquared", "LR"), x, t = NULL, alpha = .05, lambda, gradient, type, depthType, ...) {
   method <- match.arg(method)
   if (missing(candidates)) {
     candidates <- generateCandidates(theta, ...)
@@ -43,6 +43,13 @@ confidenceSet <- function(candidates, theta, method = c("depth", "chisquared"), 
     I <- predfat:::estI(x = x, theta = theta, lambda = lambda, gradient = gradient)
     diffs <- apply(candidates, 1, function(x) theta - x)
     testCandidates <- apply(diffs, 2, function(x) t(x) %*% I %*% x > qchisq(1 - alpha, df = length(theta)))
+  }
+  
+  if (method == "LR") {
+    ML_like <- sum(t * exp(lambda(theta = theta, x = x)) - lambda(theta = theta, x = x))
+    cand_like <- apply(candidates, 1, function(y) sum(t * exp(lambda(theta = y, x = x)) - lambda(theta = y, x = x)))
+    teststat <- 2 * (cand_like - ML_like)
+    testCandidates <- teststat > qchisq(1 - alpha, df = length(theta))
   }
   candidates[!testCandidates, ]
 }

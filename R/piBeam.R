@@ -14,7 +14,7 @@
 #' @param plot logical value indicating whether the prediction intervals should be plotted or not
 #' @param method one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta
 #' @export
-piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type, method = c("depth", "chisquared"), plot = FALSE, 
+piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type, method = c("depth", "chisquared", "LR"), plot = FALSE, 
                    xlim, alpha = .05, addTrue = TRUE, ...) {
   if (missing(link)) {
     link <- linkfun(type)
