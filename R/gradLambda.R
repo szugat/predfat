@@ -24,5 +24,13 @@ gradLambda <- function(type = 4) {
             lambdaValue * log(x))
     }
   }
+  
+  if (type == 5) {
+    res <- function(x, theta, lambda) {
+      lambdaValue <- exp(lambda(x = x, theta = theta))
+      cbind(-lambdaValue,
+            lambdaValue * log(x))
+    }
+  }
   return(res)
 }
