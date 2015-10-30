@@ -4,7 +4,7 @@
 \alias{gradLambda}
 \title{Collection of gradient functions of link function for exponential distribution}
 \usage{
-gradLambda(type = 4)
+gradLambda(type)
 }
 \arguments{
 \item{type}{integer (1-6) indicating the desired link function, see \code{\link{linkfun}}}

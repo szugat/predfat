@@ -1,7 +1,7 @@
 #' Collection of gradient functions of link function for exponential distribution
 #' @param type integer (1-6) indicating the desired link function, see \code{\link{linkfun}}
 #' @return gradient of link function at x with respect to theta 
-gradLambda <- function(type = 4) {
+gradLambda <- function(type) {
   if (type == 1 || type == 2) {
     res <- function(x, theta, lambda) {
       lambdaValue <- exp(lambda(x = x, theta = theta))
