@@ -18,7 +18,7 @@ gradH <- function(x, y, theta, lambda, gradient, type){
   if (missing(gradient)) {
     gradient <- gradLambda(type)
   }
-  rates <- exp(lambda(x, theta))
+  rates <- exp(lambda(x = x, theta = theta))
   
   ratetoalpha <- function(rate) {   # function from sdprisk to compute a_j
     stopifnot(is.numeric(rate), all(is.finite(rate)))
@@ -30,7 +30,7 @@ gradH <- function(x, y, theta, lambda, gradient, type){
   }
   aj <- ratetoalpha(rates)
   
-  lambdaDot <- as.matrix(gradient(x, theta))
+  lambdaDot <- as.matrix(gradient(x, theta, lambda = lambda))
   
   ## second addend: a_j(theta) * diff(1 - exp(-b * lambda(j, s_0)), theta)
   bterm <- exp(-y * rates)

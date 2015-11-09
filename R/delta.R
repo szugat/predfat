@@ -32,7 +32,7 @@ delta <- function(stresses, deltat, truss, start, toPred, link, gradient, type, 
     bLower <- qhypoexp(p = alpha/2, rate = rates, interval = c(0, 10^10))
     bUpper <- qhypoexp(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))
     bDot <- function(y){
-      -1/dhypoexp(x = y, rate = rates) * gradH(newdata, y, theta, lambda = link, gradient = gradient)
+      -1/dhypoexp(x = y, rate = rates) * predfat:::gradH(newdata, y, theta, lambda = link, gradient = gradient)
     }
     
     if (withSolve) {
@@ -49,6 +49,5 @@ delta <- function(stresses, deltat, truss, start, toPred, link, gradient, type, 
     v2 <- qnorm(1 - alpha/2) * sqrt(t(bdu) %*% I1 %*% bdu)
     return(list(interval = c(bLower - v1, bUpper + v2), quantiles = c(bLower, bUpper), v = c(v1, v2)))
   }
-  debug(getInterval)
   lapply(seq_along(lambdaNew), function(i) getInterval(lambdaNew[1:i], x0[1:i]))
 }
