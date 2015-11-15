@@ -1,4 +1,4 @@
-context("Check if prediction for SFB data works")
+lolcontext("Check if prediction for SFB data works")
 load(system.file("data.RData", package = "predfat"))
 # starter <- c(25, 0.005, 2)
 x <- unlist(stress)
@@ -139,13 +139,14 @@ plotData(x, t, xlim = c(0, 600))
 points(newdata, fitted, type = "l", lwd = 2)
 
 ## Test Delta:
-testDelta <- delta(stresses = stress, deltat = t_jm, truss = 9, start = startSol, toPred = 10, type = 4, withSolve = TRUE)
+testDelta <- delta(stresses = stress, deltat = t_jm, truss = 9, start = startSol, toPred = 2, type = 4, withSolve = TRUE)
 
+load(system.file("data.RData", package = "predfat"))
 stresses <- stress
 deltat <- t_jm
 truss <- 9
 start <- startSol
-toPred <- 5
+toPred <- 1
 type <- 4
 withSolve <- TRUE
 startSol <- c(42, 0.013,  0.6)
@@ -227,5 +228,6 @@ bterm <- exp(-bLower * rates)
 gradBterm <- t(bLower * apply(derivations, 1, "*", bterm))
 
 ## erster Summand:
-rowSums(deriv_ai * rbind(1 - bterm, 1 - bterm, 1 - bterm))
-
+term1 <- rowSums(deriv_ai * rbind(1 - bterm, 1 - bterm, 1 - bterm))
+## zweiterSummand:
+term2 <- drop(gradBterm %*% ai)

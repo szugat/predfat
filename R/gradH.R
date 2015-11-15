@@ -18,15 +18,16 @@ gradH <- function(x, y, theta, lambda, gradient, type){
   if (missing(gradient)) {
     gradient <- gradLambda(type)
   }
+
   rates <- exp(lambda(x = x, theta = theta))
-  derivations <- sapply(x0, gradient, theta = theta, lambda = link)
+  derivations <- sapply(x, gradient, theta = theta, lambda = lambda)
   
-  ai <- sdprisk:::ratetoalpha(lambdaNew)
+  ai <- sdprisk:::ratetoalpha(rates)
   ## derivation ai:
   faktoren <- sapply(seq_along(ai), function(k) {
     prod(sapply(seq_along(ai), function(j) {
       if (j !=k ) {
-        lambdaNew[k] / (lambdaNew[k] - lambdaNew[j])
+        rates[k] / (rates[k] - rates[j])
       } else {
         1
       }
@@ -37,7 +38,7 @@ gradH <- function(x, y, theta, lambda, gradient, type){
   for(i in seq_along(ai)) {
     ai_dev[[i]] <- sapply(seq_along(ai), function(k) {
       if(k != i) {
-        faktoren[k] *(lambdaNew[k] * derivations[, i] - lambdaNew[i] * derivations[, k]) / (lambdaNew[k] - lambdaNew[i])**2
+        faktoren[k] *(rates[k] * derivations[, i] - rates[i] * derivations[, k]) / (rates[k] - rates[i])**2
       } else {
         rep(0, length(theta))
       }
@@ -45,16 +46,20 @@ gradH <- function(x, y, theta, lambda, gradient, type){
   }
   
   deriv_ai <- sapply(ai_dev, rowSums)
+  bterm <- exp(-y * rates)
+  #first <- rowSums(deriv_ai * rbind(1 - bterm, 1 - bterm, 1 - bterm))
+  first <- drop(deriv_ai %*% (1 - bterm))
   
-  lambdaDot <- as.matrix(gradient(x, theta, lambda = lambda))
+  ##lambdaDot <- as.matrix(gradient(x, theta, lambda = lambda))
   
   ## second addend: a_j(theta) * diff(1 - exp(-b * lambda(j, s_0)), theta)
-  bterm <- exp(-y * rates)
-  gradBterm <- y * apply(lambdaDot, 2, "*", bterm)
+
+  gradBterm <- y * apply(derivations, 1, "*", bterm)
+  
   if(length(ai) > 1) {
-    second <- ai %*% gradBterm
+    second <- drop(ai %*% gradBterm)
   } else {
-    second <- ai * gradBterm
+    second <- drop(ai * gradBterm)
   }
   
 #   ## first addend: diff(a_j(theta), theta) * (1 - exp(-b * lambda(j, s_0)))
