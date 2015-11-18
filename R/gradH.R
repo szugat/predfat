@@ -24,21 +24,34 @@ gradH <- function(x, y, theta, lambda, gradient, type){
   
   ai <- sdprisk:::ratetoalpha(rates)
   ## derivation ai:
-  faktoren <- sapply(seq_along(ai), function(k) {
-    prod(sapply(seq_along(ai), function(j) {
-      if (j !=k ) {
-        rates[k] / (rates[k] - rates[j])
-      } else {
-        1
-      }
-    }))
-  })
+  faktoren <- vector(mode = "list", length(ai))
+  for(i in seq_along(faktoren)) {
+    for(k in seq_along(faktoren)) {
+      faktoren[[i]][k] <- prod(sapply(seq_along(faktoren), function(j) {
+        if ((j != k) && (j != i) && (k != i)) {
+          return(rates[k] / (rates[k] - rates[j]))
+        } else {
+          return(1)
+        }
+      }))
+    }
+  }
+
+#   faktoren <- sapply(seq_along(ai), function(k) {
+#     prod(sapply(seq_along(ai), function(j) {
+#       if (j !=k ) {
+#         rates[k] / (rates[k] - rates[j])
+#       } else {
+#         1
+#       }
+#     }))
+#   })
   
   ai_dev <- vector(mode = "list", length(ai))
   for(i in seq_along(ai)) {
     ai_dev[[i]] <- sapply(seq_along(ai), function(k) {
       if(k != i) {
-        faktoren[k] *(rates[k] * derivations[, i] - rates[i] * derivations[, k]) / (rates[k] - rates[i])**2
+        faktoren[[i]][k] *(rates[k] * derivations[, i] - rates[i] * derivations[, k]) / (rates[k] - rates[i])**2
       } else {
         rep(0, length(theta))
       }
