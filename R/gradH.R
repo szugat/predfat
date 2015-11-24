@@ -29,7 +29,7 @@ gradH <- function(x, y, theta, lambda, gradient, type){
     for(k in seq_along(faktoren)) {
       faktoren[[i]][k] <- prod(sapply(seq_along(faktoren), function(j) {
         if ((j != k) && (j != i) && (k != i)) {
-          return(rates[k] / (rates[k] - rates[j]))
+          return(rates[j] / (rates[j] - rates[i]))
         } else {
           return(1)
         }
