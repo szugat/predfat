@@ -139,7 +139,7 @@ plotData(x, t, xlim = c(0, 600))
 points(newdata, fitted, type = "l", lwd = 2)
 
 ## Test Delta:
-testDelta <- delta(stresses = stress, deltat = t_jm, truss = 9, start = startSol, toPred = 20, type = 4, withSolve = TRUE, alpha = alpha)
+testDelta <- delta(stresses = stress, deltat = t_jm, truss = 9, start = startSol, toPred = 10, type = 4, withSolve = TRUE, alpha = alpha)
 
 load(system.file("data.RData", package = "predfat"))
 stresses <- stress
@@ -150,7 +150,7 @@ start <- startSol
 toPred <- 1
 type <- 4
 withSolve <- TRUE
-alpha <- Re(predfat:::qs(a = 1, b = -2, c = +0.05)[2])
+alpha <- Re(predfat:::qs(a = 1, b = -2, c = +0.1)[2])
 
 link <- predfat:::linkfun(4)
 gradient <- predfat:::gradLambda(4)

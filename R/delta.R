@@ -27,7 +27,7 @@ delta <- function(stresses, deltat, truss, start, toPred, link, gradient, type, 
   lambdaNew <- exp(link(x = x0, theta = theta))
   
   #fitted <- getFit(newdata = xNew, theta = theta, lambda = lambda)
-  
+
   getInterval <- function(rates, newdata) {
     bLower <- qhypoexp(p = alpha/2, rate = rates, interval = c(0, 10^10))
     bUpper <- qhypoexp(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))

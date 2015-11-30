@@ -21,7 +21,6 @@ gradH <- function(x, y, theta, lambda, gradient, type){
 
   rates <- exp(lambda(x = x, theta = theta))
   derivations <- sapply(x, gradient, theta = theta, lambda = lambda)
-  
   ai <- sdprisk:::ratetoalpha(rates)
   ## derivation ai:
   faktoren <- vector(mode = "list", length(ai))
@@ -57,24 +56,24 @@ gradH <- function(x, y, theta, lambda, gradient, type){
       }
     })
   }
-  
   deriv_ai <- sapply(ai_dev, rowSums)
+
   bterm <- exp(-y * rates)
   #first <- rowSums(deriv_ai * rbind(1 - bterm, 1 - bterm, 1 - bterm))
   first <- drop(deriv_ai %*% (1 - bterm))
-  
+
   ##lambdaDot <- as.matrix(gradient(x, theta, lambda = lambda))
   
   ## second addend: a_j(theta) * diff(1 - exp(-b * lambda(j, s_0)), theta)
 
   gradBterm <- y * apply(derivations, 1, "*", bterm)
+ 
   
   if(length(ai) > 1) {
     second <- drop(ai %*% gradBterm)
   } else {
     second <- drop(ai * gradBterm)
   }
-  
 #   ## first addend: diff(a_j(theta), theta) * (1 - exp(-b * lambda(j, s_0)))
 #   tmp <- sapply(seq_along(rates),
 #                 function(j) {
