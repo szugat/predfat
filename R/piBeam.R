@@ -14,7 +14,7 @@
 #' @param plot logical value indicating whether the prediction intervals should be plotted or not
 #' @param method one of "depth" (default), "chisquared". Method for generating confidence set of parameter theta
 #' @export
-piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type, method = c("depth", "chisquared", "LR"), plot = FALSE, 
+piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type, method = c("depth", "chisquared", "LR", "naive"), plot = FALSE, 
                    xlim, alpha = .05, addTrue = TRUE, ...) {
   if (missing(link)) {
     link <- linkfun(type)
@@ -36,26 +36,33 @@ piBeam <- function(stresses, deltat, truss, start, toPred, link, gradient, type,
   
   estimation <- estML(x = x, t = t, start = start, link = link, gradient = gradient)
   theta <- estimation$optimum$par
-  
-  confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method, lambda = link, gradient = gradient, ...)
-  lambdas <- apply(confSet, 1, function(y) exp(link(x = x0, theta = y)))
-  #lambdas <- apply(confSet, 1,  function(y) exp(-y[1] + y[2]*x0))  
-  if (is.vector(lambdas))
-    lambdas <- t(lambdas)
-  
+
   getQuantiles <- function(rates) {
-    bLower <- qhypoexp(p = alpha/2, rate = rates, interval = c(0, 10^10))
-    bUpper <- qhypoexp(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))
+    bLower <- qhypoexp2(p = alpha/2, rate = rates, interval = c(0, 10^10))
+    bUpper <- qhypoexp2(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))
     return(c(bLower, bUpper))
   }
-  
-  quantiles <- apply(lambdas, 2, 
-                     function(x) vapply(seq_along(x), function(y) getQuantiles(x[1:y]), FUN.VALUE = numeric(2)))
-  lower <- seq(1, toPred * 2, by = 2)
-  upper <- lower + 1
-  lowerBounds <- vapply(lower, function(x) min(quantiles[x, ]), FUN.VALUE = numeric(1))
-  upperBounds <- vapply(upper, function(x) max(quantiles[x, ]), FUN.VALUE = numeric(1))
-  tObserved <- cumsum(deltat[[truss]])[length(deltat[[truss]])] 
+   
+  if (method == "naive") {
+    rate <- exp(link(x = x0, theta = theta))
+    quantiles <- vapply(seq_along(rate), function(x) getQuantiles(rate[1:x]), FUN.VALUE = numeric(2))
+    lowerBounds <- quantiles[1, ]
+    upperBounds <- quantiles[2, ]
+  }  else {
+    confSet <- confidenceSet(theta = theta, x = x, t = t, alpha = alpha, method = method, lambda = link, gradient = gradient, ...)
+    lambdas <- apply(confSet, 1, function(y) exp(link(x = x0, theta = y)))
+    #lambdas <- apply(confSet, 1,  function(y) exp(-y[1] + y[2]*x0))  
+    if (is.vector(lambdas))
+      lambdas <- t(lambdas)
+    
+    quantiles <- apply(lambdas, 2, 
+                       function(x) vapply(seq_along(x), function(y) getQuantiles(x[1:y]), FUN.VALUE = numeric(2)))
+    lower <- seq(1, toPred * 2, by = 2)
+    upper <- lower + 1
+    lowerBounds <- vapply(lower, function(x) min(quantiles[x, ]), FUN.VALUE = numeric(1))
+    upperBounds <- vapply(upper, function(x) max(quantiles[x, ]), FUN.VALUE = numeric(1))
+  }
+  tObserved <- sum(deltat[[truss]])
   if (length(tObserved) ==  0)
     tObserved <- rep(0, length(lowerBounds))
   unten <- tObserved + lowerBounds

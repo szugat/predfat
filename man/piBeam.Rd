@@ -5,7 +5,7 @@
 \title{Compute prediction intervals for state dependent Poisson process for beam experiments}
 \usage{
 piBeam(stresses, deltat, truss, start, toPred, link, gradient, type,
-  method = c("depth", "chisquared", "LR"), plot = FALSE, xlim,
+  method = c("depth", "chisquared", "LR", "naive"), plot = FALSE, xlim,
   alpha = 0.05, addTrue = TRUE, ...)
 }
 \arguments{
