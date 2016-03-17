@@ -29,8 +29,8 @@ delta <- function(stresses, deltat, truss, start, toPred, link, gradient, type, 
   #fitted <- getFit(newdata = xNew, theta = theta, lambda = lambda)
 
   getInterval <- function(rates, newdata) {
-    bLower <- qhypoexp(p = alpha/2, rate = rates, interval = c(0, 10^10))
-    bUpper <- qhypoexp(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))
+    bLower <- qhypoexp2(p = alpha/2, rate = rates, interval = c(0, 10^10))
+    bUpper <- qhypoexp2(p = 1 - alpha/2, rate = rates, interval = c(0, 10^10))
     bDot <- function(y){
        -1/dhypoexp(x = y, rate = rates) * predfat:::gradH(x = newdata, y = y, theta = theta, lambda = link, gradient = gradient)
     }
