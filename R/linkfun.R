@@ -5,7 +5,7 @@
 linkfun <- function(type) {
   if (type == 1) { # nonlinear
     res <- function(theta, x) {
-      -theta[1] + theta[2] * x - theta[3] * x^(-theta[4])
+      -theta[1] + theta[2] * x - theta[3] * x**(-theta[4])
     }
   }
   
