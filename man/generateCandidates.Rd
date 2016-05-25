@@ -2,7 +2,7 @@
 % Please edit documentation in R/generateCandidates.R
 \name{generateCandidates}
 \alias{generateCandidates}
-\title{Grid generation around a given two-dimensional point needed for confidence sets}
+\title{Grid generation around a given point needed for confidence sets}
 \usage{
 generateCandidates(center, range = c(0.5, 1.5), steps = center * 0.05)
 }
