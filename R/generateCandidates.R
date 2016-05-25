@@ -1,4 +1,4 @@
-#' Grid generation around a given two-dimensional point needed for confidence sets
+#' Grid generation around a given point needed for confidence sets
 #' 
 #' Candidate generation for the confidence sets around a given a center with specified range and step width
 #' @param center center of the grid, a two-dimensional point
