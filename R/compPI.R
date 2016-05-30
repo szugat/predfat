@@ -30,9 +30,7 @@ compPI <- function(xNew, x0, L, L_max = 35L, theta, lambda, gradient, type, alph
   if (missing(gradient)) {
     gradient <- gradLambda(type)
   }
-  if (length(theta) == 2) {
-    theta <- c(theta, 0, 1)
-  }
+
   lambdaNew <- exp(lambda(x = xNew, theta = theta))
   
   #fitted <- getFit(newdata = xNew, theta = theta, lambda = lambda)
