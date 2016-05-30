@@ -6,6 +6,7 @@
 #' 
 #' @return solution of the quadratic equation a*x^2 + b*x + c = 0
 #' @author Ted Harding, \email{Ted.Harding@@nessie.mcc.ac.uk}
+#' @export
 qs <- function(a, b, c){
   a<-as.complex(a); b<-as.complex(b); c<-as.complex(c)
   i2<-(a!=0); i1<-((a==0)&(b!=0));
